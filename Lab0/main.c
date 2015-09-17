@@ -15,7 +15,7 @@ int main(int argc, const char * argv[]) {
 		S[i]=i;
 		printf("%i ",i);
 	}
+//somehow
 	/*initialized an array with 256 entries for S*/
-
     return 0;
 }
