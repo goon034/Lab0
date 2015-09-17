@@ -1,0 +1,166 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+\margl1440\margr1440\vieww25020\viewh14280\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs26 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 main:
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	//get arrays containing the key and message to "crypt"
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	//algorithm is symmetric so we don't specify whether we're performing an encryption or decryption
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	key = readText(keyLocation)
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	uncryptedMessage = readText(uncryptedMessageLocation)
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+	//initialize the crypted message as an empty char array with the proper length
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	cryptedMessage = char[length(uncryptedMessage)]
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+	//iterate over the uncrypted message char by char
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	//get key byte, XOR, put it in the crypted array
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	i = 0
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	while (i < length(uncryptedMessage)):
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 		keyByte = keyStream(key)
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 		cryptedMessage[i] = (uncryptedMessage[i] XOR keyByte)
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 		i++
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+	//write crypted array to file
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	fileOut(cryptedMessageLocation, textArray)
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+\
+//functions we need:
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+//reads a text file character by character
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 //returns a character array
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 readText(fileLocation):
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \'a0 \'a0 \'a0 \'a0 //code goes here
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	return textArray
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+//generates the next byte of the keystream, which is a char
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 keyStream(key):
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	//code goes here
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	return keyByte
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+\
+//outputs a character array to a text file
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 fileOut(fileLocation, textArray):
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	//code goes here
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+
+\f0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 	//function is void, no return
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+}
