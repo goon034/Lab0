@@ -22,5 +22,6 @@ int main(int argc, const char * argv[]) {
 	printf("Hello, World3!\n");
 	printf("Hello, World4!\n");
 	printf("test 5");
+	printf("command line");
     return 0;
 }
