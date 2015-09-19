@@ -48,14 +48,14 @@ int main(int argc, const char * argv[]) {
 	fseek(ifp, 0L, SEEK_SET);
 
 	unsigned char *key;
-	key = (char *)malloc(kLength*sizeof(char));
+	key = (unsigned char *)malloc(kLength*sizeof(char));
 	for(i=0; i<kLength; i++)
 	{
 		*(key+i) = fgetc(kfp);
 	}
 
 	unsigned char *message;
-	message = (char *)malloc(messageLength*sizeof(char));
+	message = ( unsigned char *)malloc(messageLength*sizeof(char));
 	for(i=0; i<messageLength; i++)
 	{
 		*(message+i) = fgetc(ifp);
