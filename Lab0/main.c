@@ -39,12 +39,12 @@ int main(int argc, const char * argv[]) {
 	//go to the end of the file
 	fseek(kfp, 0L, SEEK_END);
 	//ftell returns the position of the current char, which is the last one in the file 
-	kLength = ftell(kfp);
+	kLength = (int)ftell(kfp);
 	//return to the beginning
 	fseek(kfp, 0L, SEEK_SET);
 	//same as before
 	fseek(ifp, 0L, SEEK_END);
-	messageLength = ftell(ifp);
+	messageLength = (int)ftell(ifp);
 	fseek(ifp, 0L, SEEK_SET);
 
 	unsigned char *key;
