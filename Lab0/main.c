@@ -25,8 +25,8 @@ int main(int argc, const char * argv[]) {
 	int j;
  
 	//open the files. note that the input files should be in the same directory as the C file.
-	kfp = fopen("./keyFile.txt", "rb");
-	ifp = fopen("./plainText.txt", "rb");
+	kfp = fopen("./keyFile.txt", "r");
+	ifp = fopen("./plainText.txt", "r");
 	ofp = fopen("./encryptedText.txt", "w");
 
 
