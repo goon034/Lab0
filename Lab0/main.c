@@ -8,9 +8,10 @@
 #include <math.h>
 #include <assert.h>
 
-int getFileLength(FILE *file);
-unsigned char *copyFileToCharPointer();
-unsigned char generateKeyByte(unsigned char *s);
+int getFileLength(FILE *);
+unsigned char *copyFileToCharPointer(FILE *, int);
+unsigned char *generateS(unsigned char *, int);
+unsigned char generateKeyByte(unsigned char *);
 
 int main(int argc, const char * argv[]) {
 	
@@ -24,9 +25,6 @@ int main(int argc, const char * argv[]) {
 	//declare the message/key lengths
 	int kLength;
 	int messageLength;
-	//declare i and j (used in loops)
-	int i;
-	int j;
  
 	//open the files. note that the input files should be in the same directory as the C file.
 	kfp = fopen("./keyFile.txt", "rb");
@@ -46,49 +44,16 @@ int main(int argc, const char * argv[]) {
 	key = copyFileToCharPointer(kfp, kLength);
 	message = copyFileToCharPointer(ifp, messageLength);
 	
-	//initialize S
-	unsigned char *S;
-	S = (unsigned char *)malloc(256*sizeof(char));
-	//fill S with [0, 1, 2, 3, ..., 255] as chars
-	for(i=0; i<256; i++)
-	{
-		*(S+i) = (char)i;
-	}
-	
-	//initialize T.
-	unsigned char *T;
-	T = (unsigned char *)malloc(256*sizeof(char));
-	//go through T setting T[i] = key[i mod kLength]
-	for(i=0; i<256; i++)
-	{
-		//note that for 0<=i<256, i mod kLength = i, so T=key if they're the same length or key is longer.
-		*(T+i) = *(key+(i % kLength));
-	}
-	
-	
-	//permute S to get everything set up.
-	j=0;
-	for(i=0; i<256; i++)
-	{
-		//set up j
-		j = (j + (int)(*(S+i)) + (int)(*(T+i))) % 256;
-		//swap S[i] and S[j]
-		char S_ti = *(S+i);
-		char S_tj = *(S+j);
-		*(S+i) = S_tj;
-		*(S+j) = S_ti;
-	}
-	
+	//generate S
+	unsigned char *S = generateS(key, kLength);
 	
 	//encrypt or decrypt the message by generating the keystream, XOR-ing it with the text file and
 	//writing to the file pointed to by ifp
-	for(i=0; i<messageLength; i++){
+	for(int i=0; i<messageLength; i++){
 		unsigned char c = generateKeyByte(S+i);
 		c = c ^ *(message+i);
 		fputc(c, ofp);
 	}
-	
-	
 	
 	//close the files
 	fclose(kfp);
@@ -135,4 +100,39 @@ unsigned char generateKeyByte(unsigned char *s){
 	*(s+j) = s_ti;
 	t = (*(s+i) + *(s+j)) % 256;
 	return *(s+t);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char *generateS(unsigned char *key, int kLength){
+	unsigned char *s = (unsigned char *)malloc(256*sizeof(char));
+	//fill S with [0, 1, 2, 3, ..., 255] as chars
+	for(int i=0; i<256; i++)
+	{
+		*(s+i) = (char)i;
+	}
+	
+	//initialize T.
+	unsigned char *T;
+	T = (unsigned char *)malloc(256*sizeof(char));
+	//go through T setting T[i] = key[i mod kLength]
+	for(int i=0; i<256; i++)
+	{
+		//note that for 0<=i<256, i mod kLength = i, so T=key if they're the same length or key is longer.
+		*(T+i) = *(key+(i % kLength));
+	}
+	
+	//permute S to get everything set up.
+	int j=0;
+	for(int i=0; i<256; i++)
+	{
+		//set up j
+		j = (j + (int)(*(s+i)) + (int)(*(T+i))) % 256;
+		//swap S[i] and S[j]
+		char s_ti = *(s+i);
+		char s_tj = *(s+j);
+		*(s+i) = s_tj;
+		*(s+j) = s_ti;
+	}
+	return s;
 }
