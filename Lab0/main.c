@@ -80,7 +80,6 @@ int main(int argc, const char * argv[]) {
 	for(i=0; i<256; i++)
 	{
 		//note that for 0<=i<256, i mod kLength = i, so T=key if they're the same length or key is longer.
-		//kLength_test should be replaced with kLength once the I/O stuff is working
 		*(T+i) = *(key+(i % kLength));
 	}
 
