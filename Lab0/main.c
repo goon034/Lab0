@@ -64,22 +64,24 @@ int main(int argc, const char * argv[]) {
 
 
 	//initialize S
-	unsigned char S[256];
+	unsigned char *S;
+	S = (unsigned char *)malloc(256*sizeof(char));
 	//fill S with [0, 1, 2, 3, ..., 255] as chars
 	for(i=0; i<256; i++)
         {
-        	S[i] = (char)i;
+        	*(S+i) = (char)i;
         }
 
 
 	//initialize T.
-	unsigned char T[256];
+	unsigned char *T;
+	T = (unsigned char *)malloc(256*sizeof(char));
 	//go through T setting T[i] = key[i mod kLength]
 	for(i=0; i<256; i++)
 	{
 		//note that for 0<=i<256, i mod kLength = i, so T=key if they're the same length or key is longer.
 		//kLength_test should be replaced with kLength once the I/O stuff is working
-		T[i] = *(key+(i % kLength));
+		*(T+i) = *(key+(i % kLength));
 	}
 
 
@@ -88,12 +90,12 @@ int main(int argc, const char * argv[]) {
 	for(i=0; i<256; i++)
 	{
 		//set up j
-		j = (j + (int)S[i] + (int)T[i]) % 256;
+		j = (j + (int)(*(S+i)) + (int)(*(T+i))) % 256;
 		//swap S[i] and S[j]
-		char S_ti = S[i];
-		char S_tj = S[j];
-		S[i] = S_tj;
-		S[j] = S_ti;
+		char S_ti = *(S+i);
+		char S_tj = *(S+j);
+		*(S+i) = S_tj;
+		*(S+j) = S_ti;
 	}
 
 
@@ -115,14 +117,14 @@ int main(int argc, const char * argv[]) {
 	printf("S: ");
 	for(i=0; i<256; i++)
 	{
-		printf("%c", S[i]);
+		printf("%c", *(S+i));
 		printf(", ");
 	}
 	printf("\n\n");
 	printf("T: ");
 	for(i=0; i<256; i++)
 	{
-		printf("%c", T[i]);
+		printf("%c", *(T+i));
 		printf(", ");
 	}
 	printf("\n\n");
