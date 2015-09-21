@@ -15,7 +15,6 @@ unsigned char generateKeyByte(unsigned char *s){
 //in case you guys didn't see my notes
 //main returns void and takes no arguments.
 //main() declares implicitly to the compiler that main will not accept arguments and will not return any args
-//do not declare erroneous returns/args when they aren't needed
 main() {
 	
 	//declare file pointers
