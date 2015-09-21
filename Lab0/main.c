@@ -12,7 +12,7 @@ unsigned char generateKeyByte(unsigned char *s){
 	//code goes here
 }
 
-int main(int argc, const char * argv[]) {
+main() {
 	
 	//declare file pointers
 	FILE *kfp;
