@@ -8,7 +8,9 @@
 #include <math.h>
 #include <assert.h>
 
-unsigned char generateKeyByte(unsigned char *s);
+unsigned char generateKeyByte(unsigned char *s){
+	//code goes here
+}
 
 int main(int argc, const char * argv[]) {
 	
