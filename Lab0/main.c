@@ -1,6 +1,7 @@
-//
-//  main.c
-//  Lab0
+//  Emma Bryce - Eliot Bush - Ygor Jean
+//  encryption.c
+//  ECE 353 Lab 0
+//  9/22/15
 
 
 #include <stdio.h>
@@ -8,143 +9,53 @@
 #include <math.h>
 #include <assert.h>
 
-unsigned char generateKeyByte(unsigned char *s){
-	//code goes here
-}
+int i;
+int getFileLength(FILE *);
+unsigned char *copyFileToCharPointer(FILE *, int);
+unsigned char *generateS(unsigned char *, int);
+unsigned char generateKeyByte(unsigned char *);
 
-//in case you guys didn't see my notes
-//main returns void and takes no arguments.
-//main() declares implicitly to the compiler that main will not accept arguments and will not return any args
-main() {
+int main(int argc, const char * argv[]) {
 	
 	//declare file pointers
 	FILE *kfp;
 	FILE *ifp;
 	FILE *ofp;
-	
+	//declare char pointers to store read file contents
+	unsigned char *key;
+	unsigned char *message;
 	//declare the message/key lengths
 	int kLength;
 	int messageLength;
-	
-	//declare i and j (used in loops)
-	int i;
-	int j;
  
 	//open the files. note that the input files should be in the same directory as the C file.
 	kfp = fopen("./keyFile.txt", "rb");
 	ifp = fopen("./plainText.txt", "rb");
 	ofp = fopen("./encryptedText.txt", "w");
 	
-	
 	//make sure the files were found correctly
 	assert(kfp != NULL);
 	assert(ifp != NULL);
 	assert(ofp != NULL);
 	
+	//get file lengths
+	kLength = getFileLength(kfp);
+	messageLength = getFileLength(ifp);
 	
-	//this block gets the message/key lengths.
-	//go to the end of the file
-	fseek(kfp, 0L, SEEK_END);
-	//ftell returns the position of the current char, which is the last one in the file
-	kLength = (int)ftell(kfp);
-	//return to the beginning
-	fseek(kfp, 0L, SEEK_SET);
-	//same as before
-	fseek(ifp, 0L, SEEK_END);
-	messageLength = (int)ftell(ifp);
-	fseek(ifp, 0L, SEEK_SET);
+	//create pointer "arrays"
+	key = copyFileToCharPointer(kfp, kLength);
+	message = copyFileToCharPointer(ifp, messageLength);
 	
-	unsigned char *key;
-	key = (unsigned char *)malloc(kLength*sizeof(char));
-	for(i=0; i<kLength; i++)
-	{
-		*(key+i) = fgetc(kfp);
-	}
+	//generate S
+	unsigned char *S = generateS(key, kLength);
 	
-	unsigned char *message;
-	message = ( unsigned char *)malloc(messageLength*sizeof(char));
-	for(i=0; i<messageLength; i++)
-	{
-		*(message+i) = fgetc(ifp);
-	}
-	
-	
-	
-	//initialize S
-	unsigned char *S;
-	S = (unsigned char *)malloc(256*sizeof(char));
-	//fill S with [0, 1, 2, 3, ..., 255] as chars
-	for(i=0; i<256; i++)
-	{
-		*(S+i) = (char)i;
-	}
-	
-	
-	//initialize T.
-	unsigned char *T;
-	T = (unsigned char *)malloc(256*sizeof(char));
-	//go through T setting T[i] = key[i mod kLength]
-	for(i=0; i<256; i++)
-	{
-		//note that for 0<=i<256, i mod kLength = i, so T=key if they're the same length or key is longer.
-		*(T+i) = *(key+(i % kLength));
-	}
-	
-	
-	//permute S to get everything set up.
-	j=0;
-	for(i=0; i<256; i++)
-	{
-		//set up j
-		j = (j + (int)(*(S+i)) + (int)(*(T+i))) % 256;
-		//swap S[i] and S[j]
-		char S_ti = *(S+i);
-		char S_tj = *(S+j);
-		*(S+i) = S_tj;
-		*(S+j) = S_ti;
-	}
-	
-	
-	
+	//encrypt or decrypt the message by generating the keystream, XOR-ing it with the text file and
+	//writing to the file pointed to by ifp
 	for(i=0; i<messageLength; i++){
 		unsigned char c = generateKeyByte(S+i);
 		c = c ^ *(message+i);
 		fputc(c, ofp);
 	}
-	
-	
-	//prints shit out: this is just for testing
-	printf("kLength: %d\n\n", kLength);
-	printf("messageLength: %d\n\n", messageLength);
-	printf("keyFile.txt: ");
-	for(i=0; i<kLength; i++)
-	{
-		printf("%c", *(key+i));
-	}
-	printf("\n\n");
-	printf("plainText.txt: ");
-	for(i=0; i<messageLength; i++)
-	{
-		printf("%c", *(message+i));
-	}
-	printf("\n\n");
-	printf("S: ");
-	for(i=0; i<256; i++)
-	{
-		printf("%c", *(S+i));
-		printf(", ");
-	}
-	printf("\n\n");
-	printf("T: ");
-	for(i=0; i<256; i++)
-	{
-		printf("%c", *(T+i));
-		printf(", ");
-	}
-	printf("\n\n");
-	
-	
-	
 	
 	//close the files
 	fclose(kfp);
@@ -152,7 +63,31 @@ main() {
 	fclose(ifp);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+int getFileLength(FILE *file){
+	//go to the end of the file
+	fseek(file, 0L, SEEK_END);
+	//ftell returns the position of the current char, which is the last one in the file
+	int length = (int)ftell(file);
+	//return to the beginning
+	fseek(file, 0L, SEEK_SET);
+	return length;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char *copyFileToCharPointer(FILE *file, int fileLength){
+	unsigned char *contents;
+	contents = (unsigned char *)malloc(fileLength*sizeof(char));
+	for(i=0; i<fileLength; i++)
+	{
+		*(contents+i) = fgetc(file);
+	}
+	return contents;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned char generateKeyByte(unsigned char *s){
 	static int i = 0;
@@ -167,4 +102,39 @@ unsigned char generateKeyByte(unsigned char *s){
 	*(s+j) = s_ti;
 	t = (*(s+i) + *(s+j)) % 256;
 	return *(s+t);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char *generateS(unsigned char *key, int kLength){
+	unsigned char *s = (unsigned char *)malloc(256*sizeof(char));
+	//fill S with [0, 1, 2, 3, ..., 255] as chars
+	for(i=0; i<256; i++)
+	{
+		*(s+i) = (char)i;
+	}
+	
+	//initialize T.
+	unsigned char *T;
+	T = (unsigned char *)malloc(256*sizeof(char));
+	//go through T setting T[i] = key[i mod kLength]
+	for(i=0; i<256; i++)
+	{
+		//note that for 0<=i<256, i mod kLength = i, so T=key if they're the same length or key is longer.
+		*(T+i) = *(key+(i % kLength));
+	}
+	
+	//permute S to get everything set up.
+	int j=0;
+	for(i=0; i<256; i++)
+	{
+		//set up j
+		j = (j + (int)(*(s+i)) + (int)(*(T+i))) % 256;
+		//swap S[i] and S[j]
+		char s_ti = *(s+i);
+		char s_tj = *(s+j);
+		*(s+i) = s_tj;
+		*(s+j) = s_ti;
+	}
+	return s;
 }
