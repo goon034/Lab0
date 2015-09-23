@@ -40,6 +40,7 @@ int main(int argc, const char * argv[]) {
 	
 	//get file lengths
 	kLength = getFileLength(kfp);
+	assert(kLength<=256);
 	messageLength = getFileLength(ifp);
 	
 	//create pointer "arrays"
@@ -52,7 +53,7 @@ int main(int argc, const char * argv[]) {
 	//encrypt or decrypt the message by generating the keystream, XOR-ing it with the text file and
 	//writing to the file pointed to by ifp
 	for(i=0; i<messageLength; i++){
-		unsigned char c = generateKeyByte(S+i);
+		unsigned char c = generateKeyByte(S);
 		c = c ^ *(message+i);
 		fputc(c, ofp);
 	}
@@ -101,6 +102,7 @@ unsigned char generateKeyByte(unsigned char *s){
 	*(s+i) = s_tj;
 	*(s+j) = s_ti;
 	t = (*(s+i) + *(s+j)) % 256;
+	assert(t<256);
 	return *(s+t);
 }
 
